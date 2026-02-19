@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_files/Service/auth_service.dart';
+import 'package:riverpod_files/components/app_shell.dart';
 import 'package:riverpod_files/components/emailtextfield.dart';
 import 'package:riverpod_files/components/snack_bar.dart';
+import 'package:riverpod_files/components/oauth_buttons.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -46,7 +48,13 @@ class _SignupScreenState extends State<SignupScreen> {
     if (result != null) {
       showCustomSnackBar(context, result);
     } else {
-      showCustomSnackBar(context, 'Signup failed. Please try again.');
+      // Signup successful, navigate to home (AppShell)
+      if (mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const AppShell()),
+          (route) => false,
+        );
+      }
     }
   }
 
@@ -61,45 +69,48 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ),
         child: Column(children: [
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 64.0, right: 16),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.end,
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     children: [
+          //       Image.asset(
+          //         'assets/images/Coffee.png',
+          //         width: 24,
+          //         height: 24,
+          //       ),
+          //       const SizedBox(width: 8),
+          //       const Text(
+          //         'COFFEE LOVERS',
+          //         style: TextStyle(
+          //           fontSize: 24,
+          //           fontWeight: FontWeight.bold,
+          //           color: Color(0xFFFFE8C2),
+          //           fontFamily: 'ShockedUp',
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Padding(
-            padding: const EdgeInsets.only(top: 64.0, right: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/Coffee.png',
-                  width: 24,
-                  height: 24,
-                ),
-                const SizedBox(width: 8),
-                const Text(
-                  'COFFEE LOVERS',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFFFE8C2),
-                    fontFamily: 'ShockedUp',
+            padding: const EdgeInsets.only(top: 64),
+            child: SizedBox(
+              height: 120,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/onboardimage.png',
+                    width: 220,
+                    height: 220,
                   ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 140,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Center(
-                child: Image.asset(
-                  'assets/images/onboardimage.png',
-                  width: 220,
-                  height: 220,
                 ),
               ),
             ),
           ),
           const SizedBox(
-            height: 32,
+            height: 12,
           ),
           Expanded(
             child: Padding(
@@ -113,9 +124,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: Column(
                     children: [
                       const Text(
-                        'LOGIN',
+                        'CREATE ACCOUNT',
                         style: TextStyle(
-                            fontSize: 48, fontWeight: FontWeight.bold),
+                            fontSize: 42, fontWeight: FontWeight.bold),
                       ),
 
                       const SizedBox(height: 32),
@@ -128,13 +139,16 @@ class _SignupScreenState extends State<SignupScreen> {
 
                       PasswordTextField(controller: passwordController),
 
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
 
                       // Sign up / submit button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero, // 👈 no radius
+                            ),
                             backgroundColor: Colors.black,
                             padding: const EdgeInsets.symmetric(vertical: 14),
                           ),
@@ -142,7 +156,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           child: _isLoading
                               ? const SizedBox(
                                   height: 16,
-                                  width: 16,
+                                  width: 12,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     color: Colors.white,
@@ -153,6 +167,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
+                                    color: Colors.white,
                                   ),
                                 ),
                         ),
@@ -210,7 +225,24 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                           ),
                         ],
-                      )
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // OAuth Sign-In Buttons
+                      OAuthButtons(
+                        onSignInSuccess: (provider, userData) {
+                          showCustomSnackBar(
+                            context,
+                            'Successfully signed in with $provider',
+                          );
+                          // TODO: Handle successful OAuth sign-in
+                          // You can pass the userData to your auth service or navigate to next screen
+                        },
+                        onSignInError: (error) {
+                          showCustomSnackBar(context, error);
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -236,7 +268,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 children: [
                   // Text
                   const Text(
-                    "Don't have an account?",
+                    "Already have an account?",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -255,7 +287,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       // Handle arrow button tap
                     },
                     child: const Text(
-                      'SIGN UP',
+                      'SIGN IN',
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
