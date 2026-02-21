@@ -4,6 +4,45 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:riverpod_files/components/snack_bar.dart';
 
+// Reusable sign up functions for Google and Facebook
+Future<Map<String, dynamic>> signUpWithGoogle() async {
+  final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+  final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+  if (googleUser == null) throw Exception('Google sign-in cancelled');
+  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+  return {
+    'id': googleUser.id,
+    'email': googleUser.email,
+    'displayName': googleUser.displayName,
+    'photoUrl': googleUser.photoUrl,
+    'idToken': googleAuth.idToken,
+    'accessToken': googleAuth.accessToken,
+  };
+}
+
+Future<Map<String, dynamic>> signUpWithFacebook() async {
+  final LoginResult result = await FacebookAuth.instance.login(
+    permissions: ['email', 'public_profile'],
+  );
+  if (result.status == LoginStatus.success) {
+    final AccessToken accessToken = result.accessToken!;
+    final userData = await FacebookAuth.instance.getUserData(
+      fields: 'id,name,email,picture',
+    );
+    return {
+      'id': userData['id'],
+      'email': userData['email'],
+      'displayName': userData['name'],
+      'photoUrl': userData['picture']?['data']?['url'],
+      'accessToken': accessToken.token,
+    };
+  } else if (result.status == LoginStatus.cancelled) {
+    throw Exception('Facebook sign-in cancelled');
+  } else {
+    throw Exception(result.message ?? 'Facebook login failed');
+  }
+}
+
 class OAuthButtons extends StatefulWidget {
   final Function(String provider, Map<String, dynamic> userData)?
       onSignInSuccess;

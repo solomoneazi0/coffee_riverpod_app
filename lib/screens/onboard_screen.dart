@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:riverpod_files/components/app_shell.dart';
+import 'package:riverpod_files/Auth/signup_screen.dart';
+// import 'package:riverpod_files/auth/login_screen.dart';
+// import 'package:riverpod_files/components/app_shell.dart';
 
 class OnboardScreen extends StatefulWidget {
   const OnboardScreen({super.key});
@@ -140,7 +142,8 @@ class _OnboardScreenState extends State<OnboardScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const AppShell()),
+                      MaterialPageRoute(
+                          builder: (context) => const SignupScreen()),
                     );
                     // Handle arrow button tap
                   },

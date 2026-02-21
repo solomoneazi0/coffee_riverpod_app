@@ -7,6 +7,7 @@ import 'package:riverpod_files/providers/cart_provider.dart';
 import 'package:riverpod_files/providers/products_provider.dart';
 import 'package:riverpod_files/screens/cart/cart_screen.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -34,13 +35,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final featured = ref.watch(featuredProductsProvider);
+    final user = Supabase.instance.client.auth.currentUser;
+    final fullName = user?.userMetadata?['full_name'] ?? 'there';
     // final cartItems = ref.watch(cartNotifierProvider);
 
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(100),
         child: WelcomeHeader(
-          userName: 'Solomon',
+          userName: '$fullName 👋',
           imagePath: 'assets/images/user-profile.jpg',
           onCartTap: () {
             Navigator.push(

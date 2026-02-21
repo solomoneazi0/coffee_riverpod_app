@@ -103,3 +103,65 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
     );
   }
 }
+
+// Name field
+
+class NameTextField extends StatefulWidget {
+  final TextEditingController controller;
+  const NameTextField({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  @override
+  State<NameTextField> createState() => _NameTextFieldState();
+}
+
+class _NameTextFieldState extends State<NameTextField> {
+  // bool _obscureText = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: widget.controller,
+      // obscureText: _obscureText,
+      cursorColor: Colors.black,
+      style: const TextStyle(
+        fontSize: 16,
+        fontFamily: 'Archivo',
+        color: Colors.black,
+      ),
+      decoration: const InputDecoration(
+        labelText: 'Full name',
+        labelStyle: TextStyle(
+          fontSize: 16,
+          fontFamily: 'Archivo',
+          color: Colors.black,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.zero,
+          borderSide: BorderSide(color: Colors.black),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.zero,
+          borderSide: BorderSide(
+            color: Colors.black,
+            width: 2,
+          ),
+        ),
+        prefixIcon: Icon(Icons.person, color: Colors.black),
+        // suffixIcon: IconButton(
+        //   onPressed: () {
+        //     setState(() {
+        //       _obscureText = !_obscureText;
+        //     });
+        //   },
+        //   icon: Icon(
+        //     _obscureText ? Icons.visibility : Icons.visibility_off,
+        //     color: Colors.black,
+        //   ),
+        // ),
+      ),
+    );
+  }
+}

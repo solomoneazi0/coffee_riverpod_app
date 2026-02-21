@@ -5,11 +5,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class AuthService {
   final SupabaseClient _client = Supabase.instance.client;
 
-  Future<String?> signUp(String email, String password) async {
+  Future<String?> signUp(String email, String password, String fullName) async {
     try {
       final response = await _client.auth.signUp(
         email: email,
         password: password,
+        data: {'full_name': fullName}, // send full name as user metadata
       );
 
       if (response.user != null) {

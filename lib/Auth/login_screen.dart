@@ -1,65 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:riverpod_files/Auth/login_screen.dart';
+import 'package:riverpod_files/Auth/signup_screen.dart';
 import 'package:riverpod_files/Service/auth_service.dart';
 import 'package:riverpod_files/components/app_shell.dart';
 import 'package:riverpod_files/components/emailtextfield.dart';
 import 'package:riverpod_files/components/snack_bar.dart';
 import 'package:riverpod_files/components/oauth_buttons.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class SigninScreen extends StatefulWidget {
+  const SigninScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<SigninScreen> createState() => _SigninScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SigninScreenState extends State<SigninScreen> {
   bool rememberMe = false;
   final AuthService _authService = AuthService();
 
-  final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void dispose() {
-    fullNameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleSignUp() async {
-    final fullName = fullNameController.text.trim();
+  Future<void> _handleSignIn() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
-    if (fullName.isEmpty) {
-      showCustomSnackBar(context, 'Please enter your full name.');
-      return;
-    }
+    // if (!email.contains('@') || !email.contains('.')) {
+    //   showCustomSnackBar(context, 'Please enter a valid email address.');
+    //   return;
+    // }
 
-    if (!email.contains('@') || !email.contains('.')) {
-      showCustomSnackBar(context, 'Please enter a valid email address.');
-      return;
-    }
-
-    if (password.length < 6) {
-      showCustomSnackBar(context, 'Password must be at least 6 characters.');
-      return;
-    }
+    // if (password.length < 6) {
+    //   showCustomSnackBar(context, 'Password must be at least 6 characters.');
+    //   return;
+    // }
 
     setState(() => _isLoading = true);
-    final result = await _authService.signUp(email, password, fullName);
+    final result = await _authService.signIn(email, password);
     setState(() => _isLoading = false);
 
-    if (result != null &&
-        result.toString().toLowerCase().contains('signed up')) {
+    if (result != null) {
       if (mounted) {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const AppShell()),
-          // (route) => false,
+          (route) => false,
         );
       }
     } else if (result != null) {
@@ -78,10 +69,34 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ),
         child: Column(children: [
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 64.0, right: 16),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.end,
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     children: [
+          //       Image.asset(
+          //         'assets/images/Coffee.png',
+          //         width: 24,
+          //         height: 24,
+          //       ),
+          //       const SizedBox(width: 8),
+          //       const Text(
+          //         'COFFEE LOVERS',
+          //         style: TextStyle(
+          //           fontSize: 24,
+          //           fontWeight: FontWeight.bold,
+          //           color: Color(0xFFFFE8C2),
+          //           fontFamily: 'ShockedUp',
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.only(top: 64),
             child: SizedBox(
-              height: 80,
+              height: 120,
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Center(
@@ -94,9 +109,9 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ),
           ),
-          // const SizedBox(
-          //   height: 12,
-          // ),
+          const SizedBox(
+            height: 12,
+          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
@@ -109,18 +124,14 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: Column(
                     children: [
                       const Text(
-                        'CREATE ACCOUNT',
+                        'WELCOME BACK',
                         style: TextStyle(
                             fontSize: 42, fontWeight: FontWeight.bold),
                       ),
 
                       const SizedBox(height: 32),
 
-                      // Add your login form fields here (e.g., TextFields for email, password, full name)
-
-                      NameTextField(controller: fullNameController),
-
-                      const SizedBox(height: 16),
+                      // Add your login form fields here (e.g., TextFields for email and password)
 
                       EmailTextField(controller: emailController),
 
@@ -141,7 +152,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             backgroundColor: Colors.black,
                             padding: const EdgeInsets.symmetric(vertical: 14),
                           ),
-                          onPressed: _isLoading ? null : _handleSignUp,
+                          onPressed: _isLoading ? null : _handleSignIn,
                           child: _isLoading
                               ? const SizedBox(
                                   height: 16,
@@ -152,7 +163,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                 )
                               : const Text(
-                                  'SIGN UP',
+                                  'SIGN IN',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -162,7 +173,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 16),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -216,7 +227,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ],
                       ),
 
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 20),
 
                       // OAuth Sign-In Buttons
                       OAuthButtons(
@@ -261,7 +272,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 children: [
                   // Text
                   const Text(
-                    "Already have an account?",
+                    "Don't have an account?",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -284,11 +295,11 @@ class _SignupScreenState extends State<SignupScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const SigninScreen()),
+                              builder: (context) => const SignupScreen()),
                         );
                       },
                       child: const Text(
-                        'SIGN IN',
+                        'SIGN UP',
                         style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
