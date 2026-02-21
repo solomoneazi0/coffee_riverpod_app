@@ -57,7 +57,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       body: Column(
         children: [
-          // TOP SECTION (reduced): give the bottom more room
+          // TOP SECTION (reduced): give the bottom more room.
           Expanded(
             flex: 2,
             child: SizedBox(
