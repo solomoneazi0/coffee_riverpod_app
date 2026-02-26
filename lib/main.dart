@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_files/screens/onboard_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:riverpod_files/Auth/auth_check.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

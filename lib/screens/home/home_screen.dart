@@ -5,6 +5,7 @@ import 'package:riverpod_files/components/category_card.dart';
 import 'package:riverpod_files/models/product.dart';
 import 'package:riverpod_files/providers/cart_provider.dart';
 import 'package:riverpod_files/providers/products_provider.dart';
+import 'package:riverpod_files/screens/Product/product_detail_screen.dart';
 import 'package:riverpod_files/screens/cart/cart_screen.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -116,16 +117,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                           return Stack(
                             children: [
-                              Center(
-                                child: product.image.startsWith('http')
-                                    ? Image.network(
-                                        product.image,
-                                        fit: BoxFit.contain,
-                                      )
-                                    : Image.asset(
-                                        product.image,
-                                        fit: BoxFit.contain,
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProductDetail(
+                                        product: product,
+                                        //
                                       ),
+                                    ),
+                                  );
+                                },
+                                child: Center(
+                                  child: product.image.startsWith('http')
+                                      ? Image.network(
+                                          product.image,
+                                          fit: BoxFit.contain,
+                                        )
+                                      : Image.asset(
+                                          product.image,
+                                          fit: BoxFit.contain,
+                                        ),
+                                ),
                               ),
                               Positioned(
                                 top: 0,
@@ -151,12 +165,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       ),
                                       child: isInCart
                                           ? const Icon(
-                                              Icons.remove_shopping_cart,
+                                              Icons.remove,
                                               color: Color(0xFF0D3122),
                                               size: 24,
                                             )
                                           : const Icon(
-                                              Icons.add_shopping_cart,
+                                              Icons.add,
                                               color: Color(0xFF0D3122),
                                               size: 24,
                                             ),

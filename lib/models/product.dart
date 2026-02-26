@@ -10,6 +10,7 @@ class Product {
     required this.image,
     required this.category,
     this.tags = const [],
+    required this.rating,
   });
 
   final String id;
@@ -20,6 +21,7 @@ class Product {
   final String description;
   final int reviews;
   final List<ProductTag> tags;
+  final StarRating? rating;
 }
 
 enum Category {
@@ -70,6 +72,7 @@ extension CategoryExtension on Category {
 }
 
 enum ProductTag {
+  all,
   bestSelling,
   newArrival,
   onSale,
@@ -89,6 +92,19 @@ extension ProductTagExtension on ProductTag {
         return 'New Arrival';
       case ProductTag.onSale:
         return 'On Sale';
+      case ProductTag.all:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
+}
+
+class StarRating {
+  final double value; // e.g. 4.5
+  final int maxStars;
+
+  const StarRating({
+    required this.value,
+    this.maxStars = 5,
+  });
 }
