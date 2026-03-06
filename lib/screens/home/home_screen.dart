@@ -152,7 +152,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       if (isInCart) {
                                         cart.removeProduct(product);
                                       } else {
-                                        cart.addProduct(product);
+                                        cart.addProduct(
+                                          product,
+                                          quantity: 1,
+                                        );
                                       }
                                     },
                                     child: Container(
@@ -161,6 +164,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       decoration: const BoxDecoration(
                                         color:
                                             Color.fromARGB(255, 232, 255, 246),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black12,
+                                            blurRadius: 4,
+                                            offset: Offset(0, 2),
+                                          ),
+                                        ],
                                         // shape: BoxShape.circle,
                                       ),
                                       child: isInCart
@@ -211,10 +221,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Other Products ',
+                        Text('Shop by brand',
                             style: TextStyle(
                                 fontSize: 16,
-                                fontFamily: 'archivo',
+                                // fontFamily: 'archivo',
                                 fontWeight: FontWeight.w500)),
 
                         Row(

@@ -28,9 +28,21 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
           if (cartProducts.isEmpty) {
             return const Center(
-              child: Text(
-                'Your cart is empty',
-                style: TextStyle(fontSize: 24),
+              child: Padding(
+                padding: EdgeInsets.only(top: 300.0),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.shopping_cart_outlined,
+                      size: 64,
+                      color: Colors.grey,
+                    ),
+                    Text(
+                      'Your cart is empty',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                  ],
+                ),
               ),
             );
           }

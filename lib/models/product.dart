@@ -22,6 +22,27 @@ class Product {
   final int reviews;
   final List<ProductTag> tags;
   final StarRating? rating;
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['id'],
+      title: json['title'],
+      price: json['price'],
+      image: json['image'],
+      category: Category.values.firstWhere(
+        (e) => e.name == json['category'],
+      ),
+      description: json['description'],
+      reviews: json['reviews'],
+      tags: (json['tags'] as List<dynamic>?)
+              ?.map((t) => ProductTag.values.firstWhere(
+                    (e) => e.name == t,
+                  ))
+              .toList() ??
+          [],
+      rating: json['rating'] != null ? StarRating(value: json['rating']) : null,
+    );
+  }
 }
 
 enum Category {

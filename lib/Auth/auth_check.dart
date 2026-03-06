@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:riverpod_files/auth/login_screen.dart';
 import 'package:riverpod_files/screens/home/home_screen.dart';
+import 'package:riverpod_files/providers/cart_provider.dart';
+import 'package:riverpod_files/providers/wishlist_provider.dart';
 
-class AuthCheck extends StatelessWidget {
+class AuthCheck extends ConsumerStatefulWidget {
   const AuthCheck({super.key});
+
+  @override
+  ConsumerState<AuthCheck> createState() => _AuthCheckState();
+}
+
+class _AuthCheckState extends ConsumerState<AuthCheck> {
+  bool _hasLoadedUserData = false;
+
+  Future<void> _loadUserData() async {
+    // Load saved cart & wishlist from Supabase
+    await ref.read(cartProvider.notifier).loadCartFromSupabase();
+    await ref.read(wishlistProvider.notifier).loadWishlistFromSupabase();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,21 +31,29 @@ class AuthCheck extends StatelessWidget {
       builder: (context, snapshot) {
         final session = supabase.auth.currentSession;
 
-        // While checking session (optional loading state)
+        // ⏳ While auth state is loading
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        // If logged in → go to Home
+        // USER LOGGED IN
         if (session != null) {
+          // Load user data ONLY ONCE
+          if (!_hasLoadedUserData) {
+            _hasLoadedUserData = true;
+            _loadUserData();
+          }
+
           return const HomeScreen();
         }
 
-        // If not logged in → go to Login
+        // USER LOGGED OUT → clear local state
+        _hasLoadedUserData = false;
+        ref.read(cartProvider.notifier).clear();
+        ref.read(wishlistProvider.notifier).clear();
+
         return const SigninScreen();
       },
     );

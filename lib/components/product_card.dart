@@ -42,7 +42,7 @@ class _ProductCardState extends ConsumerState<ProductCard> {
                   final cart = ref.read(cartProvider.notifier);
                   isInCart
                       ? cart.removeProduct(widget.product)
-                      : cart.addProduct(widget.product);
+                      : cart.addProduct(widget.product, quantity: 1);
                 },
                 child: Container(
                   width: 32,
